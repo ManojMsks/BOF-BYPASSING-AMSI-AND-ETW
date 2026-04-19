@@ -2,10 +2,10 @@
 #include <windows.h>
 
 typedef struct {
-    char * original;
-    char * buffer;
-    int    length;
-    int    size;
+    char * original; // The raw pointer to the start of the data
+    char * buffer;   // A moving pointer used to "read" through the data
+    int    length;   // How much data is left to read
+    int    size;     // The total size of the original data
 } datap;
 
 DECLSPEC_IMPORT void    BeaconDataParse(datap * parser, char * buffer, int size);
